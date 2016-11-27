@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /*! Reset/normalize hybrid with major contributions from normalize.css, html5doctor.com Reset Stylesheet, and http://html5reset.org/
 
 * Sam Richard - http://snugug.com/
@@ -350,7 +351,8 @@ h1, h2, h3, h4, h5, h6 {
   color: #C9E9D3;
   background-image: url("/images/backgrounds/gplaypattern_@2X.png");
   background-repeat: repeat;
-  background-size: 188px; }
+  background-size: 188px;
+  background-attachment: fixed; }
   .heroHeader a:link {
     text-decoration: underline;
     color: #89b9e1; }
@@ -506,6 +508,29 @@ h1, h2, h3, h4, h5, h6 {
 
 .onlinePresence-item > * {
   vertical-align: middle; }
+
+.onlinePresence-item .onlinePresence-item-meta {
+  margin-left: 0.5rem; }
+
+.onlinePresence-item-meta {
+  color: black;
+  font-size: 0.8em; }
+
+.onlinePresence-item-so-stats .onlinePresence-item-so-stats-reputation {
+  margin-right: 0.5em; }
+
+.onlinePresence-item-so-stats-badge:before {
+  content: '●';
+  font-size: 1.1rem; }
+
+.onlinePresence-item-so-stats-badge._gold:before {
+  color: #FFCC01; }
+
+.onlinePresence-item-so-stats-badge._silver:before {
+  color: #B4B8BC; }
+
+.onlinePresence-item-so-stats-badge._bronze:before {
+  color: #D1A684; }
 
 .proJect .proJect-description {
   margin-top: 0.2rem; }

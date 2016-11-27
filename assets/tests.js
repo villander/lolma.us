@@ -480,6 +480,15 @@ define('lolma-us/tests/pods/locale/index/controller.lint-test', ['exports'], fun
     assert.ok(true, 'pods/locale/index/controller.js should pass ESLint.\n');
   });
 });
+define('lolma-us/tests/pods/locale/index/route.lint-test', ['exports'], function (exports) {
+  'use strict';
+
+  QUnit.module('ESLint - pods/locale/index/route.js');
+  QUnit.test('should pass ESLint', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'pods/locale/index/route.js should pass ESLint.\n');
+  });
+});
 define('lolma-us/tests/pods/locale/route.lint-test', ['exports'], function (exports) {
   'use strict';
 
