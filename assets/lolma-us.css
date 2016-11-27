@@ -346,6 +346,11 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-family: 'PT Sans Caption', sans-serif; }
 
+a[target="_blank"]:not(.-no-icon), .externalLink {
+  padding-right: 1rem;
+  background: url("/images/icons/external-link.png") right center no-repeat transparent;
+  background-size: 12px 12px; }
+
 .heroHeader {
   background-color: #0C0C0C;
   color: #C9E9D3;
@@ -465,19 +470,6 @@ h1, h2, h3, h4, h5, h6 {
   @media (min-width: 1011px) {
     .heroHeader-statement {
       font-size: 1.5rem; } }
-
-.localeSwitcher {
-  padding: 0 0.5em 0.1em;
-  background-color: white;
-  border-radius: 1rem;
-  cursor: pointer;
-  text-decoration: none;
-  color: darkgrey;
-  opacity: 0.6;
-  -webkit-transition: opacity 0.4s;
-  transition: opacity 0.4s; }
-  .localeSwitcher:hover {
-    opacity: 1; }
 
 .markdownBlock .markdownBlock-title + .markdownBlock-body {
   margin-top: 1rem; }
@@ -752,6 +744,152 @@ h1, h2, h3, h4, h5, h6 {
 .timeLine-item-date {
   font-size: 0.8em;
   color: #AA9A66; }
+
+.route-locale {
+  background-color: black;
+  background-image: -webkit-repeating-linear-gradient(135deg, black, black 4px, grey 4px, grey 8px);
+  background-image: repeating-linear-gradient(-45deg, black, black 4px, grey 4px, grey 8px); }
+  .route-locale .route-locale-menu {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 250px;
+    height: 100vh;
+    overflow-y: auto;
+    -webkit-transform: translate(250px, 0);
+            transform: translate(250px, 0); }
+  .route-locale .route-locale-menuToggler {
+    position: fixed;
+    clip: rect(0, 0, 0, 0); }
+  .route-locale .route-locale-burger {
+    position: fixed;
+    z-index: 3;
+    top: 1rem;
+    right: 1rem; }
+    @media (min-width: 801px) {
+      .route-locale .route-locale-burger {
+        top: 1rem;
+        right: 1.5rem; } }
+    @media (min-width: 1011px) {
+      .route-locale .route-locale-burger {
+        top: 1.5rem;
+        right: 2rem; } }
+    @media (min-width: 1201px) {
+      .route-locale .route-locale-burger {
+        top: 2rem;
+        right: 2.5rem; } }
+  .route-locale .route-locale-content {
+    position: relative;
+    height: 100vh;
+    z-index: 1;
+    overflow-y: scroll;
+    box-shadow: -1px 0 8px black; }
+  .route-locale .route-locale-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: calc(100% - 250px);
+    height: 100%;
+    z-index: 3;
+    display: none; }
+  .route-locale .route-locale-burger, .route-locale .route-locale-content, .route-locale .route-locale-menu {
+    -webkit-transition: opacity 0.25s linear, -webkit-transform 0.25s ease-in-out;
+    transition: opacity 0.25s linear, -webkit-transform 0.25s ease-in-out;
+    transition: transform 0.25s ease-in-out, opacity 0.25s linear;
+    transition: transform 0.25s ease-in-out, opacity 0.25s linear, -webkit-transform 0.25s ease-in-out; }
+  .route-locale .route-locale-menuToggler:checked ~ .route-locale-burger {
+    opacity: 1; }
+  .route-locale .route-locale-menuToggler:checked ~ .route-locale-content {
+    opacity: 0.7; }
+  .route-locale .route-locale-menuToggler:checked ~ .route-locale-backdrop {
+    display: block; }
+  .route-locale .route-locale-menuToggler:checked ~ .route-locale-menu {
+    -webkit-transform: translate(0, 0);
+            transform: translate(0, 0); }
+  .route-locale .route-locale-menuToggler:checked ~ .route-locale-burger,
+  .route-locale .route-locale-menuToggler:checked ~ .route-locale-content {
+    -webkit-transform: translate(-250px, 0);
+            transform: translate(-250px, 0); }
+
+.route-locale-menu {
+  background-color: #B74934;
+  color: white; }
+  .route-locale-menu a:link {
+    text-decoration: underline;
+    color: white; }
+  .route-locale-menu a:active {
+    text-decoration: underline;
+    color: #e6e6e6; }
+  .route-locale-menu a:hover:not(:disabled) {
+    text-decoration: underline;
+    color: #e6e6e6; }
+  .route-locale-menu a:visited {
+    text-decoration: underline;
+    color: white; }
+  .route-locale-menu a, .route-locale-menu a.-disabled {
+    text-decoration: none;
+    color: #f5ddef; }
+  .route-locale-menu h1, .route-locale-menu h2, .route-locale-menu h3, .route-locale-menu h4, .route-locale-menu h5, .route-locale-menu h6 {
+    color: white; }
+    .route-locale-menu h1.-callout, .route-locale-menu h2.-callout, .route-locale-menu h3.-callout, .route-locale-menu h4.-callout, .route-locale-menu h5.-callout, .route-locale-menu h6.-callout {
+      color: white;
+      text-shadow: 0 0 0.5px white;
+      position: relative; }
+      .route-locale-menu h1.-callout:after, .route-locale-menu h2.-callout:after, .route-locale-menu h3.-callout:after, .route-locale-menu h4.-callout:after, .route-locale-menu h5.-callout:after, .route-locale-menu h6.-callout:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        box-shadow: 0 0 1px white;
+        border-bottom: 1px solid white; }
+  .route-locale-menu .route-locale-menu-greeting {
+    margin-bottom: 2rem;
+    vertical-align: middle; }
+
+.route-locale-menu-greeting {
+  padding: 1rem;
+  text-align: center;
+  font-family: 'PT Sans Caption', sans-serif;
+  font-size: 1.2rem;
+  font-weight: bold; }
+  .route-locale-menu-greeting .route-locale-menu-greeting-emoji {
+    font-size: 1.5em;
+    vertical-align: middle; }
+
+.route-locale-menu-items .route-locale-menu-item {
+  display: block;
+  border-top: 1px solid white; }
+  .route-locale-menu-items .route-locale-menu-item:last-child {
+    border-bottom: 1px solid white; }
+
+.route-locale-menu-item {
+  padding: 0.8rem 1rem;
+  font-size: 1.2rem; }
+  .route-locale-menu-item, .route-locale-menu-item * {
+    text-decoration: none !important; }
+  .route-locale-menu-item:hover {
+    color: white !important;
+    background-color: rgba(255, 255, 255, 0.1); }
+
+.route-locale-backdrop {
+  cursor: pointer; }
+
+.route-locale-burger {
+  padding: 0.5rem;
+  border-radius: 50%;
+  background-color: white;
+  cursor: pointer;
+  opacity: 0.6; }
+  .route-locale-burger .route-locale-burger-icon {
+    width: 1.4rem;
+    height: 1.4rem;
+    display: block; }
+  .route-locale-burger:hover {
+    opacity: 1; }
+
+.route-locale-content {
+  background-color: white; }
 
 .route-localeIndex {
   position: relative; }

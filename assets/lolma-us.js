@@ -1078,6 +1078,15 @@ define('lolma-us/helpers/sort-by', ['exports', 'ember-composable-helpers/helpers
     }
   });
 });
+define('lolma-us/helpers/svg-jar', ['exports', 'ember-string', 'ember-svg-jar/utils/make-helper', 'ember-svg-jar/utils/make-svg', 'lolma-us/inline-assets'], function (exports, _emberString, _emberSvgJarUtilsMakeHelper, _emberSvgJarUtilsMakeSvg, _lolmaUsInlineAssets) {
+  exports.svgJar = svgJar;
+
+  function svgJar(assetId, svgAttrs) {
+    return (0, _emberString.htmlSafe)((0, _emberSvgJarUtilsMakeSvg['default'])(assetId, svgAttrs, _lolmaUsInlineAssets['default']));
+  }
+
+  exports['default'] = (0, _emberSvgJarUtilsMakeHelper['default'])(svgJar);
+});
 define('lolma-us/helpers/t', ['exports', 'ember-i18n/helper'], function (exports, _emberI18nHelper) {
   Object.defineProperty(exports, 'default', {
     enumerable: true,
@@ -1530,6 +1539,9 @@ define('lolma-us/initializers/truth-helpers', ['exports', 'ember', 'ember-truth-
     initialize: initialize
   };
 });
+define("lolma-us/inline-assets", ["exports"], function (exports) {
+  exports["default"] = { "hamburger": { "content": "<title/><path d=\"M0 2h25v4H0V2zm0 8h25v4H0v-4zm0 8h25v4H0v-4z\" fill=\"#000\" fill-rule=\"evenodd\"/>", "attrs": { "height": "25", "viewBox": "0 0 25 25", "width": "25", "xmlns": "http://www.w3.org/2000/svg" } } };
+});
 define("lolma-us/instance-initializers/browser/clear-double-boot", ["exports"], function (exports) {
   /*globals Ember*/
 
@@ -1669,14 +1681,18 @@ define('lolma-us/locales/en/translations', ['exports'], function (exports) {
     header: {
       title: 'Andrey Mikhaylov',
       frontend: 'frontend developer',
-      ember: 'EmberJS specialist'
+      ember: 'EmberJS enthusiast'
     },
-    langSwitcher: 'по-русски',
+    menu: {
+      greeting: 'You are awesome today!',
+      source: 'Source on GitHub'
+    },
+    langSwitcher: 'Моя не понимать',
     login: {
       logIn: 'Log in',
       withGitHub: 'with GitHub to star projects',
       logOut: 'Log out',
-      loggingIn: 'Заходим...'
+      loggingIn: 'Logging in...'
     },
     onlinePresence: {
       title: 'Online presence'
@@ -1713,9 +1729,13 @@ define('lolma-us/locales/ru/translations', ['exports'], function (exports) {
     header: {
       title: 'Андрей Михайлов',
       frontend: 'фронтенд-разработчик',
-      ember: 'специалист по EmberJS'
+      ember: 'EmberJS-энтузиаст'
     },
-    langSwitcher: 'english',
+    menu: {
+      greeting: 'Ты сегодня лучше всех!',
+      source: 'Исходник на GitHub'
+    },
+    langSwitcher: 'Switch to English',
     login: {
       logIn: 'Войдите',
       withGitHub: 'через GitHub, чтобы ставить звездочки',
@@ -1813,7 +1833,7 @@ define('lolma-us/models/markdown-block', ['exports', 'ember-data/model', 'ember-
     website: (0, _emberDataRelationships.belongsTo)('markdown-block')
   });
 });
-define('lolma-us/models/project-info', ['exports', 'ember-data/model', 'ember-data/attr', 'ember-data/relationships', 'ember-computed', 'ember-service/inject', 'lolma-us/utils/fetch-github', 'rsvp', 'ember-computed-template-string', 'ember-object', 'ember'], function (exports, _emberDataModel, _emberDataAttr, _emberDataRelationships, _emberComputed, _emberServiceInject, _lolmaUsUtilsFetchGithub, _rsvp, _emberComputedTemplateString, _emberObject, _ember) {
+define('lolma-us/models/project-info', ['exports', 'ember-data/model', 'ember-data/attr', 'ember-computed', 'ember-service/inject', 'lolma-us/utils/fetch-github', 'rsvp', 'ember-computed-template-string', 'ember-object', 'ember'], function (exports, _emberDataModel, _emberDataAttr, _emberComputed, _emberServiceInject, _lolmaUsUtilsFetchGithub, _rsvp, _emberComputedTemplateString, _emberObject, _ember) {
   var PromiseProxyMixin = _ember['default'].PromiseProxyMixin;
 
   var PromiseProxy = _emberObject['default'].extend(PromiseProxyMixin);
@@ -1933,6 +1953,8 @@ define('lolma-us/models/project-info', ['exports', 'ember-data/model', 'ember-da
   });
 });
 
+// import {belongsTo} from 'ember-data/relationships'
+
 // import wait from 'lolma-us/utils/wait'
 define('lolma-us/models/project', ['exports', 'ember-data/model', 'ember-data/attr', 'ember-data/relationships', 'ember-computed', 'ember-cpm/macros/conditional', 'ember-computed-template-string'], function (exports, _emberDataModel, _emberDataAttr, _emberDataRelationships, _emberComputed, _emberCpmMacrosConditional, _emberComputedTemplateString) {
   // import service from 'ember-service/inject'
@@ -2017,7 +2039,6 @@ define('lolma-us/pods/application/route', ['exports', 'ember-route', 'ember-serv
         projectInfos: store.findAll('project-info')
         // Ignore 403 error
         ['catch'](function (response) {
-          console.log('projectInfos failed', response);
           if (response.status === 403) return null;
           return _rsvp['default'].reject(response);
         }),
@@ -2062,7 +2083,6 @@ define('lolma-us/pods/application/route', ['exports', 'ember-route', 'ember-serv
 
       var promises = remainingIds.map(function (id) {
         return store.findRecord('project-info', id)['catch'](function (response) {
-          console.log('remainingProjectInfo failed', id, response);
           if (response.status === 403) return null;
           return _rsvp['default'].reject(response);
         });
@@ -2284,7 +2304,7 @@ define('lolma-us/pods/components/pro-ject/component', ['exports', 'ember-compone
 // import conditional from "ember-cpm/macros/conditional"
 // import templateString from 'ember-computed-template-string'
 define("lolma-us/pods/components/pro-ject/template", ["exports"], function (exports) {
-  exports["default"] = Ember.HTMLBars.template({ "id": null, "block": "{\"statements\":[[\"open-element\",\"div\",[]],[\"static-attr\",\"class\",\"proJect-meta\"],[\"flush-element\"],[\"text\",\"\\n\\n  \"],[\"open-element\",\"a\",[]],[\"dynamic-attr\",\"href\",[\"unknown\",[\"project\",\"effectiveUrl\"]],null],[\"static-attr\",\"target\",\"_blank\"],[\"flush-element\"],[\"append\",[\"unknown\",[\"project\",\"effectiveName\"]],false],[\"close-element\"],[\"text\",\"\\n\\n  \"],[\"append\",[\"helper\",[\"star-button\"],null,[[\"label\",\"count\",\"disabled\",\"link\",\"act\"],[[\"get\",[\"starButtonLabel\"]],[\"get\",[\"starCount\"]],[\"helper\",[\"and\"],[[\"get\",[\"session\",\"isAuthenticated\"]],[\"get\",[\"project\",\"projectInfo\",\"starPromisePending\"]]],null],[\"get\",[\"project\",\"gitHubUrl\"]],[\"helper\",[\"action\"],[[\"get\",[null]],\"toggleStar\"],null]]]],false],[\"text\",\"\\n\\n\"],[\"block\",[\"if\"],[[\"get\",[\"project\",\"emberObserver\"]]],null,2],[\"text\",\"\\n\"],[\"block\",[\"if\"],[[\"helper\",[\"gte\"],[[\"get\",[\"project\",\"status\"]],2],null]],null,1],[\"close-element\"],[\"text\",\"\\n\\n\"],[\"block\",[\"if\"],[[\"get\",[\"currentDescription\"]]],null,0]],\"locals\":[],\"named\":[],\"yields\":[],\"blocks\":[{\"statements\":[[\"text\",\"  \"],[\"append\",[\"helper\",[\"markdown-to-html\"],[[\"get\",[\"currentDescription\"]]],[[\"class\"],[\"proJect-description\"]]],false],[\"text\",\"\\n\"]],\"locals\":[]},{\"statements\":[[\"text\",\"    \"],[\"open-element\",\"span\",[]],[\"dynamic-attr\",\"class\",[\"concat\",[\"proJect-status -\",[\"unknown\",[\"project\",\"status\"]]]]],[\"flush-element\"],[\"text\",\"\\n      \"],[\"append\",[\"unknown\",[\"statusLabel\"]],false],[\"text\",\"\\n    \"],[\"close-element\"],[\"text\",\"\\n\"]],\"locals\":[]},{\"statements\":[[\"text\",\"    \"],[\"open-element\",\"a\",[]],[\"dynamic-attr\",\"href\",[\"concat\",[\"https://emberobserver.com/addons/\",[\"unknown\",[\"project\",\"id\"]]]]],[\"static-attr\",\"target\",\"_blank\"],[\"flush-element\"],[\"text\",\"\\n      \"],[\"open-element\",\"img\",[]],[\"dynamic-attr\",\"src\",[\"concat\",[\"https://emberobserver.com/badges/\",[\"unknown\",[\"project\",\"id\"]],\".svg\"]]],[\"static-attr\",\"alt\",\"Ember Observer Score\"],[\"flush-element\"],[\"close-element\"],[\"text\",\"\\n    \"],[\"close-element\"],[\"text\",\"\\n\"]],\"locals\":[]}],\"hasPartials\":false}", "meta": { "moduleName": "lolma-us/pods/components/pro-ject/template.hbs" } });
+  exports["default"] = Ember.HTMLBars.template({ "id": null, "block": "{\"statements\":[[\"open-element\",\"div\",[]],[\"static-attr\",\"class\",\"proJect-meta\"],[\"flush-element\"],[\"text\",\"\\n\\n  \"],[\"open-element\",\"a\",[]],[\"dynamic-attr\",\"href\",[\"unknown\",[\"project\",\"effectiveUrl\"]],null],[\"static-attr\",\"target\",\"_blank\"],[\"flush-element\"],[\"append\",[\"unknown\",[\"project\",\"effectiveName\"]],false],[\"close-element\"],[\"text\",\"\\n\\n  \"],[\"append\",[\"helper\",[\"star-button\"],null,[[\"label\",\"count\",\"disabled\",\"link\",\"act\"],[[\"get\",[\"starButtonLabel\"]],[\"get\",[\"starCount\"]],[\"helper\",[\"and\"],[[\"get\",[\"session\",\"isAuthenticated\"]],[\"get\",[\"project\",\"projectInfo\",\"starPromisePending\"]]],null],[\"get\",[\"project\",\"gitHubUrl\"]],[\"helper\",[\"action\"],[[\"get\",[null]],\"toggleStar\"],null]]]],false],[\"text\",\"\\n\\n\"],[\"block\",[\"if\"],[[\"get\",[\"project\",\"emberObserver\"]]],null,2],[\"text\",\"\\n\"],[\"block\",[\"if\"],[[\"helper\",[\"gte\"],[[\"get\",[\"project\",\"status\"]],2],null]],null,1],[\"close-element\"],[\"text\",\"\\n\\n\"],[\"block\",[\"if\"],[[\"get\",[\"currentDescription\"]]],null,0]],\"locals\":[],\"named\":[],\"yields\":[],\"blocks\":[{\"statements\":[[\"text\",\"  \"],[\"append\",[\"helper\",[\"markdown-to-html\"],[[\"get\",[\"currentDescription\"]]],[[\"class\"],[\"proJect-description\"]]],false],[\"text\",\"\\n\"]],\"locals\":[]},{\"statements\":[[\"text\",\"    \"],[\"open-element\",\"span\",[]],[\"dynamic-attr\",\"class\",[\"concat\",[\"proJect-status -\",[\"unknown\",[\"project\",\"status\"]]]]],[\"flush-element\"],[\"text\",\"\\n      \"],[\"append\",[\"unknown\",[\"statusLabel\"]],false],[\"text\",\"\\n    \"],[\"close-element\"],[\"text\",\"\\n\"]],\"locals\":[]},{\"statements\":[[\"text\",\"    \"],[\"open-element\",\"a\",[]],[\"static-attr\",\"class\",\"-no-icon\"],[\"dynamic-attr\",\"href\",[\"concat\",[\"https://emberobserver.com/addons/\",[\"unknown\",[\"project\",\"id\"]]]]],[\"static-attr\",\"target\",\"_blank\"],[\"flush-element\"],[\"text\",\"\\n      \"],[\"open-element\",\"img\",[]],[\"dynamic-attr\",\"src\",[\"concat\",[\"https://emberobserver.com/badges/\",[\"unknown\",[\"project\",\"id\"]],\".svg\"]]],[\"static-attr\",\"alt\",\"Ember Observer Score\"],[\"flush-element\"],[\"close-element\"],[\"text\",\"\\n    \"],[\"close-element\"],[\"text\",\"\\n\"]],\"locals\":[]}],\"hasPartials\":false}", "meta": { "moduleName": "lolma-us/pods/components/pro-ject/template.hbs" } });
 });
 define('lolma-us/pods/components/pro-jects/component', ['exports', 'ember-component'], function (exports, _emberComponent) {
   exports['default'] = _emberComponent['default'].extend({
@@ -2416,7 +2436,7 @@ define('lolma-us/pods/components/star-button/component', ['exports', 'ember-comp
 // actions: {
 // }
 define("lolma-us/pods/components/star-button/template", ["exports"], function (exports) {
-  exports["default"] = Ember.HTMLBars.template({ "id": null, "block": "{\"statements\":[[\"open-element\",\"a\",[]],[\"dynamic-attr\",\"class\",[\"concat\",[\"starButton-button \",[\"helper\",[\"if\"],[[\"get\",[\"disabled\"]],\"-disabled\",\"\"],null]]]],[\"dynamic-attr\",\"href\",[\"unknown\",[\"link\"]],null],[\"static-attr\",\"target\",\"_blank\"],[\"modifier\",[\"action\"],[[\"get\",[null]],[\"get\",[\"act\"]]]],[\"flush-element\"],[\"text\",\"\\n  ★ \"],[\"append\",[\"unknown\",[\"label\"]],false],[\"text\",\"\\n\"],[\"close-element\"],[\"text\",\"\\n\\n\"],[\"block\",[\"unless\"],[[\"helper\",[\"is-nully\"],[[\"get\",[\"count\"]]],null]],null,0]],\"locals\":[],\"named\":[],\"yields\":[],\"blocks\":[{\"statements\":[[\"text\",\"  \"],[\"open-element\",\"span\",[]],[\"static-attr\",\"class\",\"starButton-count\"],[\"flush-element\"],[\"text\",\"\\n    \"],[\"append\",[\"unknown\",[\"count\"]],false],[\"text\",\"\\n  \"],[\"close-element\"],[\"text\",\"\\n\"]],\"locals\":[]}],\"hasPartials\":false}", "meta": { "moduleName": "lolma-us/pods/components/star-button/template.hbs" } });
+  exports["default"] = Ember.HTMLBars.template({ "id": null, "block": "{\"statements\":[[\"open-element\",\"a\",[]],[\"dynamic-attr\",\"class\",[\"concat\",[\"starButton-button \",[\"helper\",[\"if\"],[[\"get\",[\"disabled\"]],\"-disabled\",\"\"],null],\" -no-icon\"]]],[\"dynamic-attr\",\"href\",[\"unknown\",[\"link\"]],null],[\"static-attr\",\"target\",\"_blank\"],[\"modifier\",[\"action\"],[[\"get\",[null]],[\"get\",[\"act\"]]]],[\"flush-element\"],[\"text\",\"\\n  ★ \"],[\"append\",[\"unknown\",[\"label\"]],false],[\"text\",\"\\n\"],[\"close-element\"],[\"text\",\"\\n\\n\"],[\"block\",[\"unless\"],[[\"helper\",[\"is-nully\"],[[\"get\",[\"count\"]]],null]],null,0]],\"locals\":[],\"named\":[],\"yields\":[],\"blocks\":[{\"statements\":[[\"text\",\"  \"],[\"open-element\",\"span\",[]],[\"static-attr\",\"class\",\"starButton-count\"],[\"flush-element\"],[\"text\",\"\\n    \"],[\"append\",[\"unknown\",[\"count\"]],false],[\"text\",\"\\n  \"],[\"close-element\"],[\"text\",\"\\n\"]],\"locals\":[]}],\"hasPartials\":false}", "meta": { "moduleName": "lolma-us/pods/components/star-button/template.hbs" } });
 });
 define('lolma-us/pods/components/time-line/component', ['exports', 'ember-component'], function (exports, _emberComponent) {
   exports['default'] = _emberComponent['default'].extend({
@@ -2562,7 +2582,7 @@ define('lolma-us/pods/locale/index/route', ['exports', 'ember-route'], function 
 // actions: {
 // }
 define("lolma-us/pods/locale/index/template", ["exports"], function (exports) {
-  exports["default"] = Ember.HTMLBars.template({ "id": null, "block": "{\"statements\":[[\"open-element\",\"div\",[]],[\"static-attr\",\"class\",\"route-localeIndex\"],[\"flush-element\"],[\"text\",\"\\n  \"],[\"append\",[\"helper\",[\"hero-header\"],null,[[\"statement\"],[[\"helper\",[\"find-by\"],[\"id\",[\"helper\",[\"concat\"],[\"looking-for-job-\",[\"get\",[\"model\",\"locale\"]]],null],[\"get\",[\"model\",\"markdownBlocks\"]]],null]]]],false],[\"text\",\"\\n\\n  \"],[\"append\",[\"helper\",[\"locale-switcher\"],null,[[\"class\",\"toggleLocaleAction\"],[\"route-localeIndex-localeSwitcher\",[\"helper\",[\"route-action\"],[\"toggleLocale\"],null]]]],false],[\"text\",\"\\n\\n\\n\"],[\"block\",[\"sec-tion\"],null,[[\"class\",\"innerClass\"],[\"route-localeIndex-cards\",\"route-localeIndex-cards-inner\"]],6],[\"text\",\"\\n\\n\\n\\n\\n\"],[\"block\",[\"unless\"],[[\"get\",[\"model\",\"isFastBoot\"]]],null,5],[\"text\",\"\\n\"],[\"close-element\"]],\"locals\":[],\"named\":[],\"yields\":[],\"blocks\":[{\"statements\":[[\"text\",\"          \"],[\"open-element\",\"a\",[]],[\"static-attr\",\"href\",\"\"],[\"modifier\",[\"action\"],[[\"get\",[null]],\"login\"]],[\"flush-element\"],[\"append\",[\"helper\",[\"t\"],[\"login.logIn\"],null],false],[\"close-element\"],[\"text\",\" \"],[\"append\",[\"helper\",[\"t\"],[\"login.withGitHub\"],null],false],[\"text\",\"\\n        \"]],\"locals\":[]},{\"statements\":[[\"text\",\"          \"],[\"open-element\",\"a\",[]],[\"static-attr\",\"href\",\"\"],[\"modifier\",[\"action\"],[[\"get\",[null]],\"logout\"]],[\"flush-element\"],[\"append\",[\"helper\",[\"t\"],[\"login.logOut\"],null],false],[\"close-element\"],[\"text\",\"\\n\"]],\"locals\":[]},{\"statements\":[[\"block\",[\"if\"],[[\"get\",[\"session\",\"isAuthenticated\"]]],null,1,0]],\"locals\":[]},{\"statements\":[[\"text\",\"          \"],[\"append\",[\"helper\",[\"t\"],[\"login.loggingIn\"],null],false],[\"text\",\"\\n\"]],\"locals\":[]},{\"statements\":[[\"text\",\"      \"],[\"open-element\",\"hr\",[]],[\"flush-element\"],[\"close-element\"],[\"text\",\"\\n\\n      \"],[\"open-element\",\"div\",[]],[\"flush-element\"],[\"text\",\"\\n\"],[\"block\",[\"if\"],[[\"get\",[\"isAuthenticating\"]]],null,3,2],[\"text\",\"      \"],[\"close-element\"],[\"text\",\"\\n\"]],\"locals\":[]},{\"statements\":[[\"block\",[\"sec-tion\"],null,[[\"class\",\"innerClass\"],[\"route-localeIndex-footer\",\"route-localeIndex-footer-inner\"]],4],[\"text\",\"  \"]],\"locals\":[]},{\"statements\":[[\"text\",\"\\n    \"],[\"append\",[\"helper\",[\"markdown-block\"],null,[[\"class\",\"section\"],[\"route-localeIndex-card _personality\",[\"helper\",[\"find-by\"],[\"id\",[\"helper\",[\"concat\"],[\"personality-\",[\"get\",[\"model\",\"locale\"]]],null],[\"get\",[\"model\",\"markdownBlocks\"]]],null]]]],false],[\"text\",\"\\n\\n    \"],[\"append\",[\"helper\",[\"online-presence\"],null,[[\"class\",\"projectInfos\",\"stackoverflowUser\"],[\"route-localeIndex-card _presence\",[\"get\",[\"model\",\"projectInfos\"]],[\"get\",[\"model\",\"stackoverflowUser\"]]]]],false],[\"text\",\"\\n\\n    \"],[\"append\",[\"helper\",[\"markdown-block\"],null,[[\"class\",\"section\"],[\"route-localeIndex-card _skills\",[\"helper\",[\"find-by\"],[\"id\",[\"helper\",[\"concat\"],[\"skills-\",[\"get\",[\"model\",\"locale\"]]],null],[\"get\",[\"model\",\"markdownBlocks\"]]],null]]]],false],[\"text\",\"\\n\\n    \"],[\"append\",[\"helper\",[\"pro-jects\"],null,[[\"class\",\"projects\",\"locale\",\"isFastBoot\",\"gitHubProjectsStats\"],[\"route-localeIndex-card _projects\",[\"get\",[\"model\",\"projects\"]],[\"get\",[\"model\",\"locale\"]],[\"get\",[\"model\",\"isFastBoot\"]],[\"get\",[\"model\",\"gitHubProjectsStats\"]]]]],false],[\"text\",\"\\n\\n    \"],[\"append\",[\"helper\",[\"time-line\"],null,[[\"class\"],[\"route-localeIndex-card _timeline\"]]],false],[\"text\",\"\\n\\n    \"],[\"append\",[\"helper\",[\"markdown-block\"],null,[[\"class\",\"section\"],[\"route-localeIndex-card _about-site\",[\"helper\",[\"find-by\"],[\"id\",[\"helper\",[\"concat\"],[\"about-site-\",[\"get\",[\"model\",\"locale\"]]],null],[\"get\",[\"model\",\"markdownBlocks\"]]],null]]]],false],[\"text\",\"\\n  \"]],\"locals\":[]}],\"hasPartials\":false}", "meta": { "moduleName": "lolma-us/pods/locale/index/template.hbs" } });
+  exports["default"] = Ember.HTMLBars.template({ "id": null, "block": "{\"statements\":[[\"open-element\",\"div\",[]],[\"static-attr\",\"class\",\"route-localeIndex\"],[\"flush-element\"],[\"text\",\"\\n  \"],[\"append\",[\"helper\",[\"hero-header\"],null,[[\"statement\"],[[\"helper\",[\"find-by\"],[\"id\",[\"helper\",[\"concat\"],[\"looking-for-job-\",[\"get\",[\"model\",\"locale\"]]],null],[\"get\",[\"model\",\"markdownBlocks\"]]],null]]]],false],[\"text\",\"\\n\\n\\n\"],[\"block\",[\"sec-tion\"],null,[[\"class\",\"innerClass\"],[\"route-localeIndex-cards\",\"route-localeIndex-cards-inner\"]],6],[\"text\",\"\\n\\n\\n\\n\\n\"],[\"block\",[\"unless\"],[[\"get\",[\"model\",\"isFastBoot\"]]],null,5],[\"text\",\"\\n\"],[\"close-element\"]],\"locals\":[],\"named\":[],\"yields\":[],\"blocks\":[{\"statements\":[[\"text\",\"          \"],[\"open-element\",\"a\",[]],[\"static-attr\",\"href\",\"\"],[\"modifier\",[\"action\"],[[\"get\",[null]],\"login\"]],[\"flush-element\"],[\"append\",[\"helper\",[\"t\"],[\"login.logIn\"],null],false],[\"close-element\"],[\"text\",\" \"],[\"append\",[\"helper\",[\"t\"],[\"login.withGitHub\"],null],false],[\"text\",\"\\n        \"]],\"locals\":[]},{\"statements\":[[\"text\",\"          \"],[\"open-element\",\"a\",[]],[\"static-attr\",\"href\",\"\"],[\"modifier\",[\"action\"],[[\"get\",[null]],\"logout\"]],[\"flush-element\"],[\"append\",[\"helper\",[\"t\"],[\"login.logOut\"],null],false],[\"close-element\"],[\"text\",\"\\n\"]],\"locals\":[]},{\"statements\":[[\"block\",[\"if\"],[[\"get\",[\"session\",\"isAuthenticated\"]]],null,1,0]],\"locals\":[]},{\"statements\":[[\"text\",\"          \"],[\"append\",[\"helper\",[\"t\"],[\"login.loggingIn\"],null],false],[\"text\",\"\\n\"]],\"locals\":[]},{\"statements\":[[\"text\",\"      \"],[\"open-element\",\"hr\",[]],[\"flush-element\"],[\"close-element\"],[\"text\",\"\\n\\n      \"],[\"open-element\",\"div\",[]],[\"flush-element\"],[\"text\",\"\\n\"],[\"block\",[\"if\"],[[\"get\",[\"isAuthenticating\"]]],null,3,2],[\"text\",\"      \"],[\"close-element\"],[\"text\",\"\\n\"]],\"locals\":[]},{\"statements\":[[\"block\",[\"sec-tion\"],null,[[\"class\",\"innerClass\"],[\"route-localeIndex-footer\",\"route-localeIndex-footer-inner\"]],4],[\"text\",\"  \"]],\"locals\":[]},{\"statements\":[[\"text\",\"\\n    \"],[\"append\",[\"helper\",[\"markdown-block\"],null,[[\"class\",\"section\"],[\"route-localeIndex-card _personality\",[\"helper\",[\"find-by\"],[\"id\",[\"helper\",[\"concat\"],[\"personality-\",[\"get\",[\"model\",\"locale\"]]],null],[\"get\",[\"model\",\"markdownBlocks\"]]],null]]]],false],[\"text\",\"\\n\\n    \"],[\"append\",[\"helper\",[\"online-presence\"],null,[[\"class\",\"projectInfos\",\"stackoverflowUser\"],[\"route-localeIndex-card _presence\",[\"get\",[\"model\",\"projectInfos\"]],[\"get\",[\"model\",\"stackoverflowUser\"]]]]],false],[\"text\",\"\\n\\n    \"],[\"append\",[\"helper\",[\"markdown-block\"],null,[[\"class\",\"section\"],[\"route-localeIndex-card _skills\",[\"helper\",[\"find-by\"],[\"id\",[\"helper\",[\"concat\"],[\"skills-\",[\"get\",[\"model\",\"locale\"]]],null],[\"get\",[\"model\",\"markdownBlocks\"]]],null]]]],false],[\"text\",\"\\n\\n    \"],[\"append\",[\"helper\",[\"pro-jects\"],null,[[\"class\",\"projects\",\"locale\",\"isFastBoot\",\"gitHubProjectsStats\"],[\"route-localeIndex-card _projects\",[\"get\",[\"model\",\"projects\"]],[\"get\",[\"model\",\"locale\"]],[\"get\",[\"model\",\"isFastBoot\"]],[\"get\",[\"model\",\"gitHubProjectsStats\"]]]]],false],[\"text\",\"\\n\\n    \"],[\"append\",[\"helper\",[\"time-line\"],null,[[\"class\"],[\"route-localeIndex-card _timeline\"]]],false],[\"text\",\"\\n\\n    \"],[\"append\",[\"helper\",[\"markdown-block\"],null,[[\"class\",\"section\"],[\"route-localeIndex-card _about-site\",[\"helper\",[\"find-by\"],[\"id\",[\"helper\",[\"concat\"],[\"about-site-\",[\"get\",[\"model\",\"locale\"]]],null],[\"get\",[\"model\",\"markdownBlocks\"]]],null]]]],false],[\"text\",\"\\n  \"]],\"locals\":[]}],\"hasPartials\":false}", "meta": { "moduleName": "lolma-us/pods/locale/index/template.hbs" } });
 });
 define('lolma-us/pods/locale/route', ['exports', 'ember-route', 'ember-service/inject', 'rsvp', 'npm:lodash'], function (exports, _emberRoute, _emberServiceInject, _rsvp, _npmLodash) {
   var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -2636,6 +2656,9 @@ define('lolma-us/pods/locale/route', ['exports', 'ember-route', 'ember-service/i
       }
     }
   });
+});
+define("lolma-us/pods/locale/template", ["exports"], function (exports) {
+  exports["default"] = Ember.HTMLBars.template({ "id": null, "block": "{\"statements\":[[\"open-element\",\"div\",[]],[\"static-attr\",\"class\",\"route-locale\"],[\"flush-element\"],[\"text\",\"\\n\\n  \"],[\"open-element\",\"input\",[]],[\"static-attr\",\"class\",\"route-locale-menuToggler\"],[\"static-attr\",\"id\",\"route-locale-menuToggler\"],[\"static-attr\",\"type\",\"checkbox\"],[\"flush-element\"],[\"close-element\"],[\"text\",\"\\n\\n  \"],[\"open-element\",\"label\",[]],[\"static-attr\",\"class\",\"route-locale-burger\"],[\"static-attr\",\"for\",\"route-locale-menuToggler\"],[\"flush-element\"],[\"text\",\"\\n    \"],[\"append\",[\"helper\",[\"svg-jar\"],[\"hamburger\"],[[\"class\"],[\"route-locale-burger-icon\"]]],false],[\"text\",\"\\n  \"],[\"close-element\"],[\"text\",\"\\n\\n  \"],[\"open-element\",\"label\",[]],[\"static-attr\",\"class\",\"route-locale-backdrop\"],[\"static-attr\",\"for\",\"route-locale-menuToggler\"],[\"flush-element\"],[\"close-element\"],[\"text\",\"\\n\\n\\n\\n  \"],[\"open-element\",\"div\",[]],[\"static-attr\",\"class\",\"route-locale-menu\"],[\"flush-element\"],[\"text\",\"\\n    \"],[\"open-element\",\"div\",[]],[\"static-attr\",\"class\",\"route-locale-menu-greeting\"],[\"flush-element\"],[\"text\",\"\\n      \"],[\"append\",[\"helper\",[\"t\"],[\"menu.greeting\"],null],false],[\"text\",\"\\n      \"],[\"open-element\",\"span\",[]],[\"static-attr\",\"class\",\"route-locale-menu-greeting-emoji\"],[\"flush-element\"],[\"text\",\"😎\"],[\"close-element\"],[\"text\",\"\\n    \"],[\"close-element\"],[\"text\",\"\\n\\n    \"],[\"open-element\",\"div\",[]],[\"static-attr\",\"class\",\"route-locale-menu-items\"],[\"flush-element\"],[\"text\",\"\\n      \"],[\"open-element\",\"a\",[]],[\"static-attr\",\"class\",\"route-locale-menu-item _source -no-icon\"],[\"static-attr\",\"href\",\"https://github.com/lolmaus/lolma.us\"],[\"static-attr\",\"target\",\"_blank\"],[\"flush-element\"],[\"text\",\"\\n        \"],[\"append\",[\"helper\",[\"t\"],[\"menu.source\"],null],false],[\"text\",\"\\n        \"],[\"open-element\",\"span\",[]],[\"static-attr\",\"class\",\"externalLink\"],[\"flush-element\"],[\"close-element\"],[\"text\",\"\\n      \"],[\"close-element\"],[\"text\",\"\\n\\n      \"],[\"append\",[\"helper\",[\"locale-switcher\"],null,[[\"class\",\"toggleLocaleAction\"],[\"route-locale-menu-item _locale\",[\"helper\",[\"route-action\"],[\"toggleLocale\"],null]]]],false],[\"text\",\"\\n    \"],[\"close-element\"],[\"text\",\"\\n  \"],[\"close-element\"],[\"text\",\"\\n\\n\\n\\n  \"],[\"open-element\",\"div\",[]],[\"static-attr\",\"class\",\"route-locale-content\"],[\"flush-element\"],[\"text\",\"\\n    \"],[\"append\",[\"unknown\",[\"outlet\"]],false],[\"text\",\"\\n  \"],[\"close-element\"],[\"text\",\"\\n\\n\"],[\"close-element\"]],\"locals\":[],\"named\":[],\"yields\":[],\"blocks\":[],\"hasPartials\":false}", "meta": { "moduleName": "lolma-us/pods/locale/template.hbs" } });
 });
 define('lolma-us/resolver', ['exports', 'ember-resolver'], function (exports, _emberResolver) {
   exports['default'] = _emberResolver['default'];
@@ -3342,7 +3365,7 @@ catch(err) {
 /* jshint ignore:start */
 
 if (!runningTests) {
-  require("lolma-us/app")["default"].create({"name":"lolma-us","version":"0.0.0+822614d8"});
+  require("lolma-us/app")["default"].create({"name":"lolma-us","version":"0.0.0+44ddca66"});
 }
 
 define('~fastboot/app-factory', ['lolma-us/app', 'lolma-us/config/environment'], function(App, config) {

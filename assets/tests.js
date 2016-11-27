@@ -333,7 +333,7 @@ define('lolma-us/tests/models/project-info.lint-test', ['exports'], function (ex
   QUnit.module('ESLint - models/project-info.js');
   QUnit.test('should pass ESLint', function (assert) {
     assert.expect(1);
-    assert.ok(false, 'models/project-info.js should pass ESLint.\n3:9  - \'belongsTo\' is defined but never used. (no-unused-vars)\n4:26  - \'or\' is defined but never used. (no-unused-vars)');
+    assert.ok(true, 'models/project-info.js should pass ESLint.\n');
   });
 });
 define('lolma-us/tests/models/project.lint-test', ['exports'], function (exports) {
