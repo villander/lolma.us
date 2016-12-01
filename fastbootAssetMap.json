@@ -1,11 +1,12 @@
 {
   "assets": {
-    "assets/lolma-us.css": "assets/lolma-us-e3f35744ec043c9151f439d4ea387331.css",
-    "assets/lolma-us.js": "assets/lolma-us-dd5017510eef87da5b655f35cae970ca.js",
+    "assets/lolma-us.css": "assets/lolma-us-e1424afba76dc849d6775ecb2f06f096.css",
+    "assets/lolma-us.js": "assets/lolma-us-a00f88a3ac1b297e2c88eca82dc49c49.js",
     "assets/vendor.css": "assets/vendor-d41d8cd98f00b204e9800998ecf8427e.css",
-    "assets/vendor.js": "assets/vendor-d2e0e6dc6f0119b1783dc64d1d0b402a.js",
+    "assets/vendor.js": "assets/vendor-6f4357a28e1e58229ee0edd51a9dc0c7.js",
     "images/backgrounds/gplaypattern_@2X.png": "images/backgrounds/gplaypattern_@2X-c0e006eff24b03460c2bbcfacd6f579b.png",
     "images/icons/external-link.png": "images/icons/external-link-8d36617bafaf7825908d34f0a0ddb2bb.png",
+    "images/index/hire.png": "images/index/hire-64f8a1f4efefbbdb451bf663e33def9f.png",
     "images/service-icons/email.png": "images/service-icons/email-66fdb5bac70634741053301ca0956560.png",
     "images/service-icons/ember.png": "images/service-icons/ember-f2d07120d2bb7f0d4a63810011903d75.png",
     "images/service-icons/github.png": "images/service-icons/github-438c17272c5f0e9f4a6da34d3e4bc5bd.png",
